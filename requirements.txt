@@ -406,3 +406,7 @@ zlib=1.2.12=h8cc25b3_2
 zope=1.0=py39haa95532_1
 zope.interface=5.4.0=py39h2bbff1b_0
 zstd=1.4.9=h19a0ad4_0
+
+# Required for deployment on Heroku
+gunicorn==20.1.0
+
