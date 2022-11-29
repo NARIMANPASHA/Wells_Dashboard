@@ -50,16 +50,5 @@ app.layout = html.Div(
    ]
 )
 #------------------------------------------------------------------------------
-
-
-
-
-#if __name__ == "__main__":
- #   app.run(debug=True)
-
-
-from waitress import serve
-
 if __name__ == '__main__':
-    #app.run_server(debug=True) 
-    serve(app.server,host='10.10.135.89',port=8080)  
+    app.run_server()
