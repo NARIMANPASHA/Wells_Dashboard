@@ -1,54 +1,63 @@
 import dash
-import dash_bootstrap_components as dbc
-from dash import html, dcc
+from dash import html
+from dash import dcc
+import plotly.graph_objs as go
 
-# meta_tags are required for the app layout to be mobile responsive
-#app = dash.Dash(__name__, suppress_callback_exceptions=True,
-#                meta_tags=[{'name': 'viewport',
- #                           'content': 'width=device-width, initial-scale=1.0'}]
-#                )
+########### Define your variables
+beers=['Chesapeake Stout', 'Snake Dog IPA', 'Imperial Porter', 'Double Dog IPA']
+ibu_values=[35, 60, 85, 75]
+abv_values=[5.4, 7.1, 9.2, 4.3]
+color1='darkred'
+color2='orange'
+mytitle='Beer Comparison'
+tabtitle='beer!'
+myheading='Flying Dog Beers'
+label1='IBU'
+label2='ABV'
+githublink='https://github.com/austinlasseter/flying-dog-beers'
+sourceurl='https://www.flyingdog.com/beers/'
 
-
-
-#external_stylesheets= ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, use_pages=True,suppress_callback_exceptions=True,external_stylesheets=[dbc.themes.CERULEAN])
-#app = dash.Dash(__name__, use_pages=True,suppress_callback_exceptions=True)
-
-
-sidebar = dbc.Nav(
-            [
-                dbc.NavLink(
-                    [
-                        html.Div(page["name"], className="ms-2"),
-                    ],
-                    href=page["path"],
-                    active="exact",
-                )
-                for page in dash.page_registry.values()
-            ],
-            vertical=False,
-            pills=True,
-            className="bg-light",
+########### Set up the chart
+bitterness = go.Bar(
+    x=beers,
+    y=ibu_values,
+    name=label1,
+    marker={'color':color1}
+)
+alcohol = go.Bar(
+    x=beers,
+    y=abv_values,
+    name=label2,
+    marker={'color':color2}
 )
 
-#------------------------------------------------------------------------------
-app.layout = html.Div(
-     [
-        # main app framework
-        #html.Div("Python Multipage App with Dash", style={'fontSize':50, 'textAlign':'center'}),
-        
-        #html.Div([]),
-        html.Div([
-            sidebar
-            #dcc.Link(page['name']+"  |  ", href=page['path'])
-            #for page in dash.page_registry.values()
-        ]),
-        html.Hr(),
-
-        # content of each page
-        dash.page_container
-   ]
+beer_data = [bitterness, alcohol]
+beer_layout = go.Layout(
+    barmode='group',
+    title = mytitle
 )
-#------------------------------------------------------------------------------
+
+beer_fig = go.Figure(data=beer_data, layout=beer_layout)
+
+
+########### Initiate the app
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+server = app.server
+app.title=tabtitle
+
+########### Set up the layout
+app.layout = html.Div(children=[
+    html.H1(myheading),
+    dcc.Graph(
+        id='flyingdog',
+        figure=beer_fig
+    ),
+    html.A('Code on Github', href=githublink),
+    html.Br(),
+    html.A('Data Source', href=sourceurl),
+    ]
+)
+
 if __name__ == '__main__':
     app.run_server()
